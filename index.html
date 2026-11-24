@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>বাংলা কৌতুক — Bangla Jokes App</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f4f6fb;
+      --surface: #ffffff;
+      --surface-alt: #eef2ff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --accent: #f59e0b;
+      --danger: #ef4444;
+      --border: #e2e8f0;
+      --shadow: 0 6px 20px rgba(15, 23, 42, 0.06);
+      --joke-size: 16px;
+    }
+
+    body.dark {
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --surface-alt: #283548;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --primary: #818cf8;
+      --primary-hover: #6366f1;
+      --accent: #fbbf24;
+      --danger: #f87171;
+      --border: #334155;
+      --shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Noto Sans Bengali", "SolaimanLipi", "Bangla", system-ui, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      transition: background-color 0.25s, color 0.25s;
+      padding-bottom: 48px;
+    }
+
+    /* Header */
+    header {
+      background: linear-gradient(135deg, #4f46e5, #0ea5e9);
+      color: #ffffff;
+      padding: 20px 16px 28px;
+      box-shadow: 0 4px 16px rgba(79, 70, 229, 0.25);
+    }
+
+    .header-inner {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .brand h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand p {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .icon-btn {
+      background: rgba(255, 255, 255, 0.18);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      border-radius: 10px;
+      padding: 7px 11px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .icon-btn:hover {
+      background: rgba(255, 255, 255, 0.28);
+    }
+
+    .icon-btn:active {
+      transform: scale(0.96);
+    }
+
+    .search-box {
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 12px 42px 12px 16px;
+      border-radius: 12px;
+      border: none;
+      outline: none;
+      font-family: inherit;
+      font-size: 1rem;
+      background: rgba(255, 255, 255, 0.96);
+      color: #1e293b;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .search-box span {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.1rem;
+      pointer-events: none;
+    }
+
+    /* Main container */
+    main {
+      max-width: 860px;
+      margin: -14px auto 0;
+      padding: 0 16px;
+    }
+
+    /* Spotlight Random Joke */
+    .spotlight {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 5px solid var(--accent);
+      border-radius: 16px;
+      padding: 18px 20px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+    }
+
+    .spotlight-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .spotlight-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #b45309;
+      background: #fef3c7;
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+
+    body.dark .spotlight-badge {
+      color: #fcd34d;
+      background: rgba(251, 191, 36, 0.16);
+    }
+
+    .random-btn {
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      padding: 7px 14px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .random-btn:hover {
+      background: var(--primary-hover);
+    }
+
+    /* Category Pills */
+    .categories {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 4px 0 14px;
+      margin-bottom: 8px;
+      scrollbar-width: thin;
+    }
+
+    .cat-btn {
+      white-space: nowrap;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      padding: 8px 15px;
+      border-radius: 999px;
+      font-family: inherit;
+      font-size: 0.92rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .cat-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .cat-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+
+    .stats-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    /* Joke Cards */
+    .jokes-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .joke-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px 20px;
+      box-shadow: var(--shadow);
+      transition: transform 0.15s;
+    }
+
+    .joke-card:hover {
+      transform: translateY(-2px);
+    }
+
+    .joke-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .joke-title {
+      font-size: 1.08rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .joke-cat {
+      font-size: 0.78rem;
+      font-weight: 600;
+      background: var(--surface-alt);
+      color: var(--primary);
+      padding: 3px 10px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .joke-text {
+      font-size: var(--joke-size);
+      white-space: pre-line;
+      margin-bottom: 14px;
+    }
+
+    .joke-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      border-top: 1px solid var(--border);
+      padding-top: 12px;
+    }
+
+    .action-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      border-radius: 9px;
+      padding: 6px 12px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s;
+    }
+
+    .action-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .action-btn.liked {
+      color: var(--danger);
+      border-color: var(--danger);
+      background: rgba(239, 68, 68, 0.08);
+    }
+
+    .action-btn.delete-btn:hover {
+      color: var(--danger);
+      border-color: var(--danger);
+    }
+
+    .empty-state {
+      text-align: center;
+      background: var(--surface);
+      border: 1px dashed var(--border);
+      border-radius: 16px;
+      padding: 40px 20px;
+      color: var(--text-muted);
+    }
+
+    .empty-state span {
+      font-size: 2.5rem;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 100;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--surface);
+      color: var(--text);
+      width: 100%;
+      max-width: 480px;
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--border);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .modal-header h2 {
+      font-size: 1.2rem;
+    }
+
+    .close-modal {
+      background: none;
+      border: none;
+      font-size: 1.3rem;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    .form-group textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 11px;
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .submit-btn:hover {
+      background: var(--primary-hover);
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #0f172a;
+      color: #ffffff;
+      padding: 10px 18px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.25s;
+      z-index: 200;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    body.dark .toast {
+      background: #f8fafc;
+      color: #0f172a;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <div class="top-bar">
+        <div class="brand">
+          <h1>😂 বাংলা কৌতুক</h1>
+          <p>প্রতিদিন মন ভালো করার সেরা হাসির কৌতুক</p>
+        </div>
+        <div class="header-actions">
+          <button class="icon-btn" id="fontDec" title="লেখা ছোট করুন">A-</button>
+          <button class="icon-btn" id="fontInc" title="লেখা বড় করুন">A+</button>
+          <button class="icon-btn" id="themeToggle" title="থিম পরিবর্তন">🌙</button>
+          <button class="icon-btn" id="openAddModal">+ নতুন কৌতুক</button>
+        </div>
+      </div>
+
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="কৌতুক খুঁজুন (যেমন: গোপাল, বল্টু, ডাক্তার)..." />
+        <span>🔍</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Random Spotlight Joke -->
+    <section class="spotlight" id="spotlightBox">
+      <div class="spotlight-header">
+        <span class="spotlight-badge">✨ আজকের হাসির কৌতুক</span>
+        <button class="random-btn" id="randomBtn">🎲 আরেকটি কৌতুক</button>
+      </div>
+      <div id="spotlightContent"></div>
+    </section>
+
+    <!-- Category Filters -->
+    <div class="categories" id="categories"></div>
+
+    <div class="stats-bar">
+      <span id="countText">মোট কৌতুক: ০</span>
+      <span id="favCountText">প্রিয়: ০</span>
+    </div>
+
+    <!-- Jokes List -->
+    <section class="jokes-grid" id="jokesList"></section>
+  </main>
+
+  <!-- Add Joke Modal -->
+  <div class="modal-backdrop" id="modalBackdrop">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-header">
+        <h2 id="modalTitle">নতুন কৌতুক যোগ করুন</h2>
+        <button class="close-modal" id="closeModal" aria-label="বন্ধ করুন">✕</button>
+      </div>
+      <form id="addJokeForm">
+        <div class="form-group">
+          <label for="jokeTitleInput">শিরোনাম</label>
+          <input type="text" id="jokeTitleInput" placeholder="যেমন: মজার উত্তর" required />
+        </div>
+        <div class="form-group">
+          <label for="jokeCategoryInput">বিভাগ</label>
+          <select id="jokeCategoryInput">
+            <option value="গোপাল ভাঁড়">গোপাল ভাঁড়</option>
+            <option value="ছাত্র-শিক্ষক">ছাত্র-শিক্ষক</option>
+            <option value="ডাক্তার-রোগী">ডাক্তার-রোগী</option>
+            <option value="বল্টু">বল্টু</option>
+            <option value="পরিবার">পরিবার</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="jokeTextInput">কৌতুকটি লিখুন</label>
+          <textarea id="jokeTextInput" placeholder="এখানে আপনার কৌতুকটি লিখুন..." required></textarea>
+        </div>
+        <button type="submit" class="submit-btn">যোগ করুন</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const DEFAULT_JOKES = [
+      {
+        id: 1,
+        title: "হোমওয়ার্ক না করার অজুহাত",
+        category: "ছাত্র-শিক্ষক",
+        text: "শিক্ষক: মন্টু, তুমি আজকেও হোমওয়ার্ক করে আনোনি কেন?\nমন্টু: স্যার, আমাদের বাড়ির লাইট চলে গিয়েছিল, তাই অন্ধকারে করতে পারিনি।\nশিক্ষক: তা মোমবাতি জ্বালিয়ে করতে পারতে তো!\nমন্টু: স্যার, মোমবাতি জ্বালানোর জন্য দেশলাই খুঁজে পাচ্ছিলাম না।\nশিক্ষক: দেশলাই কোথায় ছিল?\nমন্টু: স্যার, ঠাকুরঘরে। কিন্তু অন্ধকারে সেখানে যাওয়া যাচ্ছিল না।\nশিক্ষক: কেন?\nমন্টু: স্যার, লাইট না থাকলে তো কিছু দেখা যায় না!"
+      },
+      {
+        id: 2,
+        title: "মহারাজের স্বপ্ন",
+        category: "গোপাল ভাঁড়",
+        text: "একদিন মহারাজ কৃষ্ণচন্দ্র সভায় এসে বললেন, \"গোপাল, কাল রাতে অদ্ভুত এক স্বপ্ন দেখলাম—আমি পড়ে গেছি এক মধুর পুকুরে, আর তুমি পড়েছ এক নর্দমায়!\"\nগোপাল একটুও না ভেবে বলল, \"মহারাজ, আমিও ঠিক একই স্বপ্ন দেখেছি!\"\nমহারাজ অবাক হয়ে বললেন, \"তাই নাকি? তারপর কী দেখলে?\"\nগোপাল বলল, \"দেখলাম, আমি আপনাকে চেটে পরিষ্কার করে দিচ্ছি, আর আপনি আমাকে চেটে পরিষ্কার করে দিচ্ছেন!\""
+      },
+      {
+        id: 3,
+        title: "চশমার পাওয়ার",
+        category: "ডাক্তার-রোগী",
+        text: "রোগী: ডাক্তারবাবু, আমার চোখের পাওয়ার মনে হয় খুব কমে গেছে, কাছের কিছুই দেখতে পাই না।\nডাক্তার (জানলার দিকে আঙুল দেখিয়ে): ওই দূরে আকাশে সূর্য দেখতে পাচ্ছেন?\nরোগী: হ্যাঁ, পাচ্ছি তো।\nডাক্তার: আরে মশাই, ওটা তো ৯ কোটি মাইল দূরে! এর চেয়ে আর কত দূর দেখতে চান?"
+      },
+      {
+        id: 4,
+        title: "মোবাইল ও চার্জার",
+        category: "বল্টু",
+        text: "বন্ধু: কিরে বল্টু, তুই নাকি রাতে মোবাইল চার্জে দিয়ে বালিশের নিচে রেখে ঘুমাস?\nবল্টু: হ্যাঁ, রাখি তো!\nবন্ধু: কেন? ওটা তো বিপজ্জনক!\nবল্টু: আরে বোকা, আমি ঘুমাই তো সারা রাত—আমিও তো রিচার্জ হতে চাই!"
+      },
+      {
+        id: 5,
+        title: "বাজারের হিসাব",
+        category: "পরিবার",
+        text: "স্ত্রী: এই শুনছ, আজ বাজার থেকে কী কী আনলে?\nস্বামী: আলু, পটল, পেঁয়াজ আর এক কেজি ইলিশ।\nস্ত্রী: দাম কত নিল?\nস্বামী: আলু ৩০, পটল ৪০, পেঁয়াজ ৫০, আর ইলিশ... ওটা বলতে গেলে এখন আমার বুকের বাঁ দিকে ব্যথা শুরু হয়ে যাবে!"
+      },
+      {
+        id: 6,
+        title: "সূর্য আর চাঁদ",
+        category: "ছাত্র-শিক্ষক",
+        text: "শিক্ষক: বলো তো পল্টু, সূর্য বেশি জরুরি নাকি চাঁদ?\nপল্টু: স্যার, অবশ্যই চাঁদ!\nশিক্ষক: কেন?\nপল্টু: স্যার, সূর্য তো দিনের বেলা আলো দেয়, যখন এমনিতেই সব পরিষ্কার দেখা যায়! কিন্তু চাঁদ তো রাতে অন্ধকারের মধ্যে আলো দেয়!"
+      },
+      {
+        id: 7,
+        title: "আকাশের তারা কয়টি?",
+        category: "গোপাল ভাঁড়",
+        text: "একবার এক পণ্ডিত মহারাজ কৃষ্ণচন্দ্রের সভায় এসে গোপালকে জব্দ করার জন্য জিজ্ঞেস করলেন, \"আচ্ছা গোপাল, বলো তো আকাশে কয়টি তারা আছে?\"\nগোপাল সাথে সাথে একটি ভেড়া নিয়ে এসে বলল, \"পণ্ডিত মশাই, এই ভেড়াটির গায়ে যতগুলো লোম আছে, আকাশে ঠিক ততগুলোই তারা আছে। বিশ্বাস না হলে গুনে দেখতে পারেন!\""
+      },
+      {
+        id: 8,
+        title: "ঘুমের সমস্যা",
+        category: "ডাক্তার-রোগী",
+        text: "রোগী: ডাক্তারবাবু, আমার একটা অদ্ভুত সমস্যা হয়েছে। আমি যখনই ঘুমাই, তখনই স্বপ্ন দেখি যে আমি ক্রিকেট খেলছি।\nডাক্তার: বাহ, এটা তো ভালো কথা! সমস্যা কী?\nরোগী: সমস্যা হলো, যেই আমি ব্যাটিং করতে নামি, তখনই সকাল হয়ে যায়—একটা বলও খেলতে পারি না!\nডাক্তার: আচ্ছা, এই নিন ঘুমের ওষুধ। আজ রাতে ঘুমানোর আগে খাবেন।\nরোগী: স্যার, একটা কথা—ওষুধটা খেলে কি আজ অন্তত ওপেনিং ব্যাটসম্যান হিসেবে নামতে পারব?"
+      },
+      {
+        id: 9,
+        title: "ব্যাংকের পাসওয়ার্ড",
+        category: "বল্টু",
+        text: "বল্টু ব্যাংকে গিয়ে ক্যাশিয়ারকে বলল, \"দাদা, আমার অ্যাকাউন্টের টাকা তুলব, কিন্তু পিন ভুলে গেছি।\"\nক্যাশিয়ার: আরে, আপনার পিন তো ৪ সংখ্যার, একটু মনে করার চেষ্টা করুন। জন্মসাল দিয়েছিলেন নাকি?\nবল্টু: না দাদা, আমার পিন ছিল 'স্টার স্টার স্টার স্টার' (****)! প্রতিবার এটিএম মেশিনে তাই তো দেখাত!"
+      },
+      {
+        id: 10,
+        title: "বাবার চশমা",
+        category: "পরিবার",
+        text: "ছেলে: বাবা, তুমি খবরের কাগজ পড়ার সময় চশমা পরো, কিন্তু টিভি দেখার সময় পরো না কেন?\nবাবা: আরে বোকা, খবরের কাগজে কথাগুলো ছোট ছোট অক্ষরে লেখা থাকে, আর টিভিতে তো ওরা চিৎকার করে মুখে বলে! শোনার জন্য আবার চশমা লাগে নাকি!"
+      },
+      {
+        id: 11,
+        title: "পায়ের চেয়ে জুতো বড়",
+        category: "গোপাল ভাঁড়",
+        text: "একবার মহারাজ গোপালকে মজা করে বললেন, \"গোপাল, তোমার জুতোজোড়া তো তোমার পায়ের চেয়েও বড় দেখাচ্ছে!\"\nগোপাল হেসে উত্তর দিল, \"মহারাজ, জুতো কি কখনো পায়ের চেয়ে ছোট হয় নাকি? ছোট হলে তো পায়েই ঢুকত না!\""
+      },
+      {
+        id: 12,
+        title: "চিঠিতে ঠিকানা",
+        category: "বল্টু",
+        text: "পোস্টমাস্টার: আরে বল্টু, তুমি এই খামের ওপর 'প্রাপক' হিসেবে নিজের নাম আর ঠিকানা লিখেছ কেন?\nবল্টু: আরে দাদা, আমার এক বন্ধু আমাকে চিঠি লিখবে বলেছে, কিন্তু সে আমার ঠিকানা জানে না! তাই আমিই লিখে পাঠাচ্ছি, যাতে ওর কষ্ট না হয়!"
+      },
+      {
+        id: 13,
+        title: "ভূগোল ক্লাস",
+        category: "ছাত্র-শিক্ষক",
+        text: "শিক্ষক: বলো তো, পৃথিবী সূর্যের চারিদিকে ঘুরতে কত সময় নেয়?\nছাত্র: স্যার, ৩৬৫ দিন ৬ ঘণ্টা।\nশিক্ষক: বাব্বা! খুব ভালো উত্তর। এবার বলো, পৃথিবী হঠাৎ ঘোরা বন্ধ করে দিলে কী হবে?\nছাত্র: স্যার, তাহলে আমাদের স্কুলের গ্রীষ্মের ছুটি কখনোই শেষ হবে না!"
+      },
+      {
+        id: 14,
+        title: "দাঁত তোলার খরচ",
+        category: "ডাক্তার-রোগী",
+        text: "রোগী: ডাক্তারবাবু, একটা দাঁত তুলতে কত টাকা নেবেন?\nডাক্তার: মাত্র ৫০০ টাকা।\nরোগী: কী বলছেন! মাত্র ২ মিনিটের কাজের জন্য ৫০০ টাকা?\nডাক্তার: আচ্ছা ঠিক আছে, আপনি চাইলে আমি আস্তে আস্তে আধা ঘণ্টা ধরে তুলে দিতে পারি!"
+      },
+      {
+        id: 15,
+        title: "ট্রেন মিস",
+        category: "বল্টু",
+        text: "এক লোক হন্তদন্ত হয়ে স্টেশনে পৌঁছে দেখল ট্রেন মাত্র ছেড়ে দিয়েছে।\nপাশে দাঁড়ানো বল্টু বলল, \"দাদা, এত দৌড়ে এলেন, তবুও ট্রেনটা মিস করলেন?\"\nলোকটি রেগে গিয়ে বলল, \"না ভাই, আমি স্টেশন থেকে ট্রেনটাকে তাড়িয়ে দিচ্ছিলাম—এই দেখুন, পালিয়ে গেল!\""
+      },
+      {
+        id: 16,
+        title: "দেরি করে বাড়ি ফেরা",
+        category: "পরিবার",
+        text: "রাত ২টোর সময় ছেলে চুপিচুপি বাড়ি ফিরল। দরজা খুলে বাবা দাঁড়িয়ে আছেন।\nবাবা: এত রাত পর্যন্ত কোথায় ছিলি?\nছেলে: বাবা, এক বন্ধুর বাড়িতে পড়াশোনা করছিলাম।\nবাবা: তাই নাকি? তোর হাতে ওই জুতোজোড়া কার?\nছেলে: ওটা... ওটা রাস্তায় কুড়িয়ে পেয়েছি, ভাবলাম বাড়িতে কাজে লাগবে!"
+      }
+    ];
+
+    const CATEGORIES = [
+      "সব",
+      "প্রিয়",
+      "গোপাল ভাঁড়",
+      "ছাত্র-শিক্ষক",
+      "ডাক্তার-রোগী",
+      "বল্টু",
+      "পরিবার"
+    ];
+
+    // Safe localStorage helpers
+    function loadStorage(key, fallback) {
+      try {
+        const val = localStorage.getItem(key);
+        return val ? JSON.parse(val) : fallback;
+      } catch (e) {
+        return fallback;
+      }
+    }
+
+    function saveStorage(key, value) {
+      try {
+        localStorage.setItem(key, JSON.stringify(value));
+      } catch (e) {}
+    }
+
+    let customJokes = loadStorage("bangla_jokes_custom", []);
+    let favorites = loadStorage("bangla_jokes_favs", []);
+    let activeCategory = "সব";
+    let searchQuery = "";
+    let fontSize = loadStorage("bangla_jokes_fontsize", 16);
+    let currentSpotlightId = null;
+
+    const jokesListEl = document.getElementById("jokesList");
+    const categoriesEl = document.getElementById("categories");
+    const searc
